@@ -5,6 +5,7 @@
 #define CANT 12
 
 void salida(char [][LEN], float [], float [], float []);
+float calculo_isr(float []);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -26,7 +27,8 @@ int main() {
    for (int i = 0; i < CANT; i++) {
       do {
          printf("Ingrese el sueldo bruto de %s:\n", meses[i]);
-         scanf("%f\n", &bruto[i]);
+         fflush(stdin);
+         scanf("%f", &bruto[i]);
 
          if (bruto[i] <= 0) {
             printf("Ingrese un numero mayor que cero\n");
@@ -51,7 +53,9 @@ int main() {
    Objetivo: Imprimir los datos en forma de tabla a la consola.
    Retorno: void
 */
-void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {\
+void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
+   // Divisor
+   printf("--------------\n");
 
    // Salida Titulos
    printf("Meses\t\t");
@@ -66,4 +70,38 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {\
       printf("%-10f\t", isr[i]);
       printf("%-10f\n", neto[i]);
    }
+}
+
+/*
+   Funcion: salida
+   Argumentos: (char[]) meses. Un arreglo con todos los meses del año
+               (float[]) bruto. Arreglo con el sueldo bruto de cada mes
+               (float[]) isr. Arreglo con el ISR de cada mes
+               (float[]) neto. Arreglo con el sueldo neto de cada mes
+   Objetivo: Imprimir los datos en forma de tabla a la consola.
+   Retorno: void
+*/
+float calculo_isr(float bruto[]) {
+   float suma;
+   float total;
+   for (int i = 0; i < CANT; i++) {
+      suma += bruto[i];
+   }
+
+   if (suma > 300000) {
+      total += (suma - 300000)*0.25;
+      suma = 300000;
+   }
+
+   if (suma > 200000) {
+      total += (suma - 200000)*0.20;
+      suma = 200000;
+   }
+
+   if (suma > 120000) {
+      total += (suma - 120000)*0.15;
+   }
+
+   return total/12;
+
 }
