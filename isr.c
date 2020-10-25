@@ -7,6 +7,7 @@
 void salida(char [][LEN], float [], float [], float []);
 void calculo_isr(float [], float []);
 void calculo_neto(float [], float [], float []);
+float proyectado(float n);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -101,28 +102,44 @@ void calculo_neto(float bruto[], float isr[], float neto[]) {
    Retorno: void
 */
 void calculo_isr(float bruto[], float isr[]) {
-   float suma = 0;
+   float calc = bruto[0]*12;
+   float res = proyectado(calc)/12;
+   float t_isr = res;
+   isr[0] = res;
+
+   float total = bruto[0];
+
+   for (int i = 1; i < CANT; i++) {
+
+      if (bruto[i] == bruto[i-1]) {
+         isr[i] = res;
+         t_isr += res;
+      } else {
+         res = (proyectado(total+(bruto[i]*(12-i))) - t_isr)/(12-i);
+         isr[i] = res;
+         t_isr += res;
+      }
+
+      total += bruto[i];
+   }
+
+}
+
+float proyectado(float n) {
    float total = 0;
-   for (int i = 0; i < CANT; i++) {
-      suma += bruto[i];
+   if (n > 300000) {
+      total += (n - 300000)*0.25;
+      n = 300000;
    }
 
-   if (suma > 300000) {
-      total += (suma - 300000)*0.25;
-      suma = 300000;
+   if (n > 200000) {
+      total += (n - 200000)*0.20;
+      n = 200000;
    }
 
-   if (suma > 200000) {
-      total += (suma - 200000)*0.20;
-      suma = 200000;
+   if (n > 120000) {
+      total += (n - 120000)*0.15;
    }
 
-   if (suma > 120000) {
-      total += (suma - 120000)*0.15;
-   }
-
-   for (int i = 0; i < CANT; i++) {
-      isr[i] = total/12;
-   }
-
+   return total;
 }
