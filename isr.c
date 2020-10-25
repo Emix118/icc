@@ -6,6 +6,7 @@
 
 void salida(char [][LEN], float [], float [], float []);
 void calculo_isr(float [], float []);
+void calculo_neto(float [], float [], float []);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -24,6 +25,7 @@ int main() {
 
    float bruto[CANT];
    float isr[CANT];
+   float neto[CANT];
 
    for (int i = 0; i < CANT; i++) {
       do {
@@ -39,8 +41,8 @@ int main() {
    }
 
    calculo_isr(bruto, isr);
+   calculo_neto(bruto, isr, neto);
 
-   float neto[CANT] = {12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12};
    salida(meses, bruto, isr, neto);
 
    return 0;
@@ -71,6 +73,21 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
       printf("%-10.2f\t", bruto[i]);
       printf("%-10.2f\t", isr[i]);
       printf("%-10.2f\n", neto[i]);
+   }
+}
+
+/*
+   Funcion: salida
+   Argumentos: (char[]) meses. Un arreglo con todos los meses del año
+               (float[]) bruto. Arreglo con el sueldo bruto de cada mes
+               (float[]) isr. Arreglo con el ISR de cada mes
+               (float[]) neto. Arreglo con el sueldo neto de cada mes
+   Objetivo: Imprimir los datos en forma de tabla a la consola.
+   Retorno: void
+*/
+void calculo_neto(float bruto[], float isr[], float neto[]) {
+   for (int i = 0; i < CANT; i++) {
+      neto[i] = bruto[i] - isr[i];
    }
 }
 
