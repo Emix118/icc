@@ -5,7 +5,7 @@
 #define CANT 12
 
 void salida(char [][LEN], float [], float [], float []);
-float calculo_isr(float []);
+void calculo_isr(float [], float []);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -23,6 +23,7 @@ int main() {
                            {'D','i','c','i','e','m','b','r','e'} };
 
    float bruto[CANT];
+   float isr[CANT];
 
    for (int i = 0; i < CANT; i++) {
       do {
@@ -37,7 +38,8 @@ int main() {
       } while(bruto[i] <= 0);
    }
 
-   float isr[CANT] = {12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12};
+   calculo_isr(bruto, isr);
+
    float neto[CANT] = {12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12};
    salida(meses, bruto, isr, neto);
 
@@ -66,9 +68,9 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
    // Salida datos por mes
    for (int i = 0; i < CANT; i++) {
       printf("%-10s:\t", meses[i]);
-      printf("%-10f\t", bruto[i]);
-      printf("%-10f\t", isr[i]);
-      printf("%-10f\n", neto[i]);
+      printf("%-10.2f\t", bruto[i]);
+      printf("%-10.2f\t", isr[i]);
+      printf("%-10.2f\n", neto[i]);
    }
 }
 
@@ -81,9 +83,9 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
    Objetivo: Imprimir los datos en forma de tabla a la consola.
    Retorno: void
 */
-float calculo_isr(float bruto[]) {
-   float suma;
-   float total;
+void calculo_isr(float bruto[], float isr[]) {
+   float suma = 0;
+   float total = 0;
    for (int i = 0; i < CANT; i++) {
       suma += bruto[i];
    }
@@ -102,6 +104,8 @@ float calculo_isr(float bruto[]) {
       total += (suma - 120000)*0.15;
    }
 
-   return total/12;
+   for (int i = 0; i < CANT; i++) {
+      isr[i] = total/12;
+   }
 
 }
