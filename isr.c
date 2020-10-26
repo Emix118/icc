@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LEN 11
-#define CANT 12
+#define LEN 11 // Maximo de caracteres para los meses
+#define CANT 12 // Numero de meses
 
 void salida(char [][LEN], float [], float [], float []);
 void calculo_isr(float [], float []);
@@ -24,10 +24,12 @@ int main() {
                            {'N','o','v','i','e','m','b','r','e'},
                            {'D','i','c','i','e','m','b','r','e'} };
 
+   // Definicion de arreglos de datos
    float bruto[CANT];
    float isr[CANT];
    float neto[CANT];
 
+   // Ingreso y validacion de los sueldos de cada mes
    for (int i = 0; i < CANT; i++) {
       do {
          printf("Ingrese el sueldo bruto de %s:\n", meses[i]);
@@ -41,9 +43,11 @@ int main() {
       } while(bruto[i] <= 0);
    }
 
+   // Llamada de funciones para calculos
    calculo_isr(bruto, isr);
    calculo_neto(bruto, isr, neto);
 
+   // Llamada de funcion para la salida de datos
    salida(meses, bruto, isr, neto);
 
    return 0;
@@ -78,12 +82,11 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
 }
 
 /*
-   Funcion: salida
-   Argumentos: (char[]) meses. Un arreglo con todos los meses del año
-               (float[]) bruto. Arreglo con el sueldo bruto de cada mes
+   Funcion: calculo_neto
+   Argumentos: (float[]) bruto. Arreglo con el sueldo bruto de cada mes
                (float[]) isr. Arreglo con el ISR de cada mes
-               (float[]) neto. Arreglo con el sueldo neto de cada mes
-   Objetivo: Imprimir los datos en forma de tabla a la consola.
+               (float[]) neto. Arreglo a poblar con el sueldo neto de cada mes
+   Objetivo: Calcular el sueldo neto y popular el arreglo neto[].
    Retorno: void
 */
 void calculo_neto(float bruto[], float isr[], float neto[]) {
@@ -93,29 +96,37 @@ void calculo_neto(float bruto[], float isr[], float neto[]) {
 }
 
 /*
-   Funcion: salida
-   Argumentos: (char[]) meses. Un arreglo con todos los meses del año
-               (float[]) bruto. Arreglo con el sueldo bruto de cada mes
-               (float[]) isr. Arreglo con el ISR de cada mes
-               (float[]) neto. Arreglo con el sueldo neto de cada mes
-   Objetivo: Imprimir los datos en forma de tabla a la consola.
+   Funcion: calculo_isr
+   Argumentos: (float[]) bruto. Arreglo con el sueldo bruto de cada mes
+               (float[]) isr. Arreglo que se poblara con el ISR de cada mes
+   Objetivo: Calcular el IRS de cada mes y poblar el arreglo isr
    Retorno: void
 */
 void calculo_isr(float bruto[], float isr[]) {
-   float calc = bruto[0]*12;
-   float res = proyectado(calc)/12;
+   // Definicion de valores segun el primer sueldo
+   float total = bruto[0];
+   float calc = bruto[0]*CANT;
+   float res = proyectado(calc)/CANT;
    float t_isr = res;
    isr[0] = res;
 
-   float total = bruto[0];
-
+   // Calculo de valores de los siguientes meses
    for (int i = 1; i < CANT; i++) {
 
       if (bruto[i] == bruto[i-1]) {
+         // Si el sueldo no cambia, el ISR se mantiene
+
          isr[i] = res;
          t_isr += res;
       } else {
-         res = (proyectado(total+(bruto[i]*(12-i))) - t_isr)/(12-i);
+         // Si hay un cambio en el sueldo se calcula un nuevo ISR
+
+         /*
+         Se calcula en base al total acumulado de los sueldos hasta el momento (total)
+         y proyectando el nuevo sueldo a lo que resta del año. Luego, se le restan los
+         pagos previos de ISR y se divide por lo que resta del año.
+         */
+         res = (proyectado(total+(bruto[i]*(CANT-i))) - t_isr)/(CANT-i);
          isr[i] = res;
          t_isr += res;
       }
@@ -125,6 +136,14 @@ void calculo_isr(float bruto[], float isr[]) {
 
 }
 
+/*
+   Funcion: proyectado
+   Argumentos: (float) n. Sueldo proyectado
+   Objetivo: Calcular las partes del sueldo que caen en los diferentes grupos y
+            determinar el porcentaje a pagar de cada una
+   Retorno: total. El numero total a pagar (Falta dividirlo por los meses en los
+            que se mantuvo ese sueldo)
+*/
 float proyectado(float n) {
    float total = 0;
    if (n > 300000) {
