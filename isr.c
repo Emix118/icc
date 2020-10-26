@@ -8,6 +8,7 @@ void salida(char [][LEN], float [], float [], float []);
 void calculo_isr(float [], float []);
 void calculo_neto(float [], float [], float []);
 float proyectado(float n);
+void ingreso_sueldo(char [][LEN], float [], int);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -31,30 +32,62 @@ int main() {
 
    // Ingreso y validacion de los sueldos de cada mes
    for (int i = 0; i < CANT; i++) {
-      do {
-         printf("Ingrese el sueldo bruto de %s:\n", meses[i]);
-         fflush(stdin);
-         scanf("%f", &bruto[i]);
-
-         if (bruto[i] <= 0) {
-            printf("Ingrese un numero mayor que cero\n");
-         }
-
-         if (i ? bruto[i] < bruto[i-1]: 0) {
-            printf("No puede ingresar un numero menor que el previo\n");
-         }
-
-      } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0));
+      ingreso_sueldo(meses, bruto, i);
    }
 
-   // Llamada de funciones para calculos
-   calculo_isr(bruto, isr);
-   calculo_neto(bruto, isr, neto);
+   // Loop para modificar los sueldos
+   int mes;
+   do {
 
-   // Llamada de funcion para la salida de datos
-   salida(meses, bruto, isr, neto);
+      // Llamada de funciones para calculos
+      calculo_isr(bruto, isr);
+      calculo_neto(bruto, isr, neto);
+
+      // Llamada de funcion para la salida de datos
+      salida(meses, bruto, isr, neto);
+
+      // Validacion del mes
+      do {
+         printf("Desea modificar algun sueldo? Elija un mes (1-12):\n");
+         scanf("%d", &mes);
+
+         if (mes < 1 || mes > 12) {
+            printf("Mes invalido\n");
+         }
+
+      } while(mes < 1 || mes > 12);
+
+      // Cambio de sueldo en el arreglo
+      ingreso_sueldo(meses, bruto, mes-1);
+
+   } while(1);
 
    return 0;
+}
+
+/*
+   Funcion: ingreso_sueldo
+   Argumentos: (char[]) meses. Un arreglo con todos los meses del año
+               (float[]) bruto. Arreglo con el sueldo bruto de cada mes
+               (int) i. Indice en el arreglo bruto[]
+   Objetivo: Validar y popular/modificar un indice del arreglo bruto[]
+   Retorno: void
+*/
+void ingreso_sueldo(char meses[][LEN], float bruto[], int i) {
+   do {
+      printf("Ingrese el sueldo bruto de %s:\n", meses[i]);
+      fflush(stdin);
+      scanf("%f", &bruto[i]);
+
+      if (bruto[i] <= 0) {
+         printf("Ingrese un numero mayor que cero\n");
+      }
+
+      if (i ? bruto[i] < bruto[i-1]: 0) {
+         printf("No puede ingresar un numero menor que el previo\n");
+      }
+
+   } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0));
 }
 
 /*
@@ -83,6 +116,8 @@ void salida(char meses[][LEN], float bruto[], float isr[], float neto[]) {
       printf("%-10.2f\t", isr[i]);
       printf("%-10.2f\n", neto[i]);
    }
+   // Divisor
+   printf("--------------\n");
 }
 
 /*
