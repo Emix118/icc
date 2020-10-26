@@ -26,7 +26,7 @@ int main() {
                            {'D','i','c','i','e','m','b','r','e'} };
 
    // Definicion de arreglos de datos
-   float bruto[CANT];
+   float bruto[CANT] = {0,0,0,0,0,0,0,0,0,0,0,0}; //Inicializados en 0 para verificar mas adelante si tienen valor o no
    float isr[CANT];
    float neto[CANT];
 
@@ -79,15 +79,24 @@ void ingreso_sueldo(char meses[][LEN], float bruto[], int i) {
       fflush(stdin);
       scanf("%f", &bruto[i]);
 
+      // Chequeo si es menero o igual a cero
       if (bruto[i] <= 0) {
          printf("Ingrese un numero mayor que cero\n");
       }
 
+      // Chequeo si es menor que el numero previo
       if (i ? bruto[i] < bruto[i-1]: 0) {
          printf("No puede ingresar un numero menor que el previo\n");
       }
 
-   } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0));
+      // Chequeo si es mayor que el numero que lo sigue si este tiene valor
+      printf("Value: %f\n", bruto[i+1]);
+      printf("Check: %d\n", bruto[i+1] ? bruto[i] > bruto[i+1] : 0);
+      if (bruto[i+1] ? bruto[i] > bruto[i+1] : 0) {
+         printf("El sueldo no puede ser mayor que el sueldo que le sigue\n");
+      }
+
+   } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0) || (bruto[i+1] ? bruto[i] > bruto[i+1] : 0) );
 }
 
 /*
