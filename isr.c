@@ -40,7 +40,11 @@ int main() {
             printf("Ingrese un numero mayor que cero\n");
          }
 
-      } while(bruto[i] <= 0);
+         if (i ? bruto[i] < bruto[i-1]: 0) {
+            printf("No puede ingresar un numero menor que el previo\n");
+         }
+
+      } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0));
    }
 
    // Llamada de funciones para calculos
