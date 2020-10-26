@@ -90,8 +90,6 @@ void ingreso_sueldo(char meses[][LEN], float bruto[], int i) {
       }
 
       // Chequeo si es mayor que el numero que lo sigue si este tiene valor
-      printf("Value: %f\n", bruto[i+1]);
-      printf("Check: %d\n", bruto[i+1] ? bruto[i] > bruto[i+1] : 0);
       if (bruto[i+1] ? bruto[i] > bruto[i+1] : 0) {
          printf("El sueldo no puede ser mayor que el sueldo que le sigue\n");
       }
