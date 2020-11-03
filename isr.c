@@ -9,6 +9,7 @@ void calculo_isr(float [], float []);
 void calculo_neto(float [], float [], float []);
 float proyectado(float n);
 void ingreso_sueldo(char [][LEN], float [], int);
+void edit_meses(float [], int);
 
 int main() {
    // Definicion del arreglo de los meses
@@ -74,6 +75,7 @@ int main() {
    Retorno: void
 */
 void ingreso_sueldo(char meses[][LEN], float bruto[], int i) {
+   char res;
    do {
       printf("Ingrese el sueldo bruto de %s:\n", meses[i]);
       fflush(stdin);
@@ -91,10 +93,38 @@ void ingreso_sueldo(char meses[][LEN], float bruto[], int i) {
 
       // Chequeo si es mayor que el numero que lo sigue si este tiene valor
       if (bruto[i+1] ? bruto[i] > bruto[i+1] : 0) {
-         printf("El sueldo no puede ser mayor que el sueldo que le sigue\n");
+         printf("El sueldo no puede ser mayor que el sueldo que le sigue, desea editar todos los meses proximo? [S/N]\n");
+
+         do {
+            scanf(" %c", &res);
+
+            if (res == 83 || res == 115) {
+               edit_meses(bruto, i);
+            } else if (!(res == 78 || res == 110)) {
+               printf("Ingrese [S/N]\n");
+            }
+
+         } while(!(res == 83 || res == 115 || res == 78 || res == 110));
+
       }
 
    } while(bruto[i] <= 0 || (i ? bruto[i] < bruto[i-1]: 0) || (bruto[i+1] ? bruto[i] > bruto[i+1] : 0) );
+}
+
+/*
+   Funcion: edit_meses
+   Argumentos: (float[]) arr. Arreglo con las cantidades a editar por mes
+               (int) inicio. Indice de inicio para la editacion
+   Objetivo: Buscar todo valor menor o igual al valor de inicio y igualarlo al valor de inicio
+   Retorno: void
+*/
+void edit_meses(float arr[], int inicio) {
+   int i = inicio;
+
+   while (arr[inicio] >= arr[i]) {
+      arr[i] = arr[inicio];
+      i++;
+   }
 }
 
 /*
